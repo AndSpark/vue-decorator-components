@@ -1,5 +1,4 @@
 import { Length, validate } from 'class-validator'
-import { defineComponent } from 'vue'
 import { InputComponent, PasswordComponent, ButtonComponet } from './components'
 import { BaseComponent } from './decorators/createComponent'
 
@@ -27,14 +26,4 @@ class Form extends BaseComponent {
 
 const loginForm = new Form().createInstanceComponent()
 
-export default defineComponent({
-	name: 'App',
-	components: { loginForm },
-	render() {
-		return (
-			<div>
-				<login-form></login-form>
-			</div>
-		)
-	}
-})
+export default loginForm
