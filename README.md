@@ -36,6 +36,6 @@ const loginForm = new Form().createInstanceComponent()
 export default loginForm
 ```
 
-![Untitled](vue-decorator-components%20c6b80443df424401ae395e3d7730abde/example.png)
+![Untitled](https://github.com/AndSpark/vue-decorator-components/blob/main/example.png)
 
 will create this
