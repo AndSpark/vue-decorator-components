@@ -4,7 +4,7 @@ This is a demo , just complete base function
 
 Use decorator component with class-validator like this:
 
-```tsx
+```ts
 import { Length, validate } from 'class-validator'
 import { InputComponent, PasswordComponent, ButtonComponet } from './components'
 import { BaseComponent } from './decorators/createComponent'
