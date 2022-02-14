@@ -1,6 +1,7 @@
 import { Length, validate } from 'class-validator'
 import { InputComponent, PasswordComponent, ButtonComponet } from './components'
-import { BaseComponent } from './decorators/createComponent'
+import { DivComponet } from './components/div'
+import { BaseComponent, Component } from './decorators/createComponent'
 
 class Form extends BaseComponent {
 	@InputComponent({ label: 'username' })
@@ -11,10 +12,15 @@ class Form extends BaseComponent {
 	@Length(4, 20)
 	password: string = ''
 
-	@ButtonComponet()
+	string: string = '123'
+
+	@ButtonComponet('add 1')
+	add = () => {
+		this.username = this.username + '1'
+	}
+	@ButtonComponet('login')
 	login = () => {
 		validate(this).then(errors => {
-			console.log(this.username, this.password)
 			if (errors.length > 0) {
 				console.log('validation failed. errors: ', errors)
 			} else {
@@ -24,6 +30,11 @@ class Form extends BaseComponent {
 	}
 }
 
-const loginForm = new Form().createInstanceComponent()
+class Test extends BaseComponent {
+	@DivComponet('1')
+	form = Form
+}
+
+const loginForm = new Test().createInstanceComponent()
 
 export default loginForm

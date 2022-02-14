@@ -1,54 +1,84 @@
-import { defineComponent, ref, watchEffect } from 'vue'
+import { defineComponent, reactive } from 'vue-demi'
 
-export const prefix = 'component_decorator_'
-
-export function Component(innerComponent: any, config?: any) {
-	return createComponentFactory(innerComponent, config)
-}
-
-export function createComponentFactory(innerComponent: any, config?: any) {
+export const COMPONENT = Symbol('component')
+export function Component(component: any, props?: any) {
 	return function (target: any, key: string) {
-		const component = prefix + key
-		target[component] = function (instance: any) {
-			return defineComponent({
-				name: innerComponent.name + '-' + key,
-				setup(props, { emit }) {
-					const value = ref(instance[key])
-					watchEffect(() => (instance[key] = value.value))
-					return { value }
-				},
-				render() {
-					return (
-						<div>
-							<span>{config.label}</span>
-							<innerComponent v-model={this.value} {...{ props: config.props }}></innerComponent>
-						</div>
-					)
+		if (!target[COMPONENT]) {
+			target[COMPONENT] = {
+				[key]: {
+					props,
+					component
 				}
-			})
+			}
+		} else {
+			target[COMPONENT][key] = {
+				props,
+				component
+			}
 		}
 	}
 }
 
 function createInstanceComponent(instance: any) {
 	let proto = Object.getPrototypeOf(instance)
+	const componentConfig: { [key: string]: any } = {}
 	const components: { [key: string]: any } = {}
 	while (proto && proto !== Object.prototype) {
-		const props = Object.getOwnPropertyNames(proto)
-		props.forEach(prop => {
-			if (prop !== 'constructor' && prop.includes(prefix)) {
-				components[prop] = proto[prop](instance)
-			}
-		})
+		if (proto[COMPONENT]) {
+			Object.entries(proto[COMPONENT]).forEach(([key, value]: [string, any]) => {
+				const component =
+					typeof value.component === 'function' ? value.component(instance, key) : value.component
+				componentConfig[key] = {
+					props: value.props,
+					component,
+					value: instance[key]
+				}
+				if (typeof value.component === 'function') {
+					components[key] = component
+				} else {
+					components[key] = component
+				}
+			})
+		}
 		proto = Object.getPrototypeOf(proto)
 	}
 	return defineComponent({
+		components,
+		setup() {
+			const values = reactive(
+				Object.fromEntries(
+					Object.entries(componentConfig)
+						.filter(([key, content]) => {
+							return typeof content.value !== 'function'
+						})
+						.map(([key, content]) => {
+							return [[key], content.value]
+						})
+				)
+			)
+
+			Object.keys(values).forEach(key => {
+				Object.defineProperty(instance, key, {
+					get() {
+						return values[key]
+					},
+					set(val) {
+						values[key] = val
+					}
+				})
+			})
+			return { values }
+		},
 		render() {
 			return (
 				<div>
-					{Object.entries(components).map(([key, component]) => (
-						<component></component>
-					))}
+					{Object.entries(componentConfig).map(([key, content]) => {
+						const { component, value, props } = content
+						if (typeof value !== 'function') {
+							return <component ref={key} v-model={this.values[key]} {...props}></component>
+						}
+						return <component ref={key} {...props}></component>
+					})}
 				</div>
 			)
 		}

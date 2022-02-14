@@ -1,13 +1,18 @@
 import { Component } from '@/decorators/createComponent'
 import { defineComponent } from 'vue-demi'
 
-export function ButtonComponet(label: string) {
+export function DivComponet(label: string) {
 	return Component(
 		function (instance: any, key: string) {
+			const target = new instance[key]().createInstanceComponent()
 			return defineComponent({
-				props: ['label'],
+				components: { target },
 				render() {
-					return <button onClick={() => instance[key]()}>{this.label}</button>
+					return (
+						<div>
+							<target></target>
+						</div>
+					)
 				}
 			})
 		},

@@ -1,5 +1,5 @@
-import { createComponentFactory } from '@/decorators/createComponent'
-import { computed, defineComponent } from 'vue'
+import { Component } from '@/decorators/createComponent'
+import { computed, defineComponent } from 'vue-demi'
 
 const Password = defineComponent({
 	props: {
@@ -32,5 +32,5 @@ const Password = defineComponent({
 export default Password
 
 export function PasswordComponent(config?: any) {
-	return createComponentFactory(Password, config)
+	return Component(Password, config)
 }

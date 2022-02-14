@@ -1,5 +1,5 @@
-import { createComponentFactory } from '@/decorators/createComponent'
-import { computed, defineComponent } from 'vue'
+import { Component } from '@/decorators/createComponent'
+import { computed, defineComponent } from 'vue-demi'
 
 const Input = defineComponent({
 	props: {
@@ -32,5 +32,5 @@ const Input = defineComponent({
 export default Input
 
 export function InputComponent(config?: any) {
-	return createComponentFactory(Input, config)
+	return Component(Input, config)
 }
