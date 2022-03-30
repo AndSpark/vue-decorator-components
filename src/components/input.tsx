@@ -5,6 +5,9 @@ const Input = defineComponent({
 	props: {
 		modelValue: {
 			type: String
+		},
+		title: {
+			type: String
 		}
 	},
 	setup(props, { emit }) {
@@ -23,6 +26,7 @@ const Input = defineComponent({
 	render() {
 		return (
 			<div>
+				<span>{this.title}</span>
 				<input type='text' v-model={this.innerValue} />
 			</div>
 		)

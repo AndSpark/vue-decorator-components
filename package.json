@@ -19,6 +19,7 @@
 		"@vue/composition-api": "^1.4.6",
 		"class-validator": "^0.13.2",
 		"core-js": "^3.6.5",
+		"reflect-metadata": "^0.1.13",
 		"vue": "^3.0.0",
 		"vue-demi": "^0.12.1"
 	},

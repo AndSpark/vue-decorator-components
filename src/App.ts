@@ -2,6 +2,7 @@ import { Length, validate } from 'class-validator'
 import { InputComponent, PasswordComponent, ButtonComponet } from './components'
 import { DivComponet } from './components/div'
 import { BaseComponent, Component } from './decorators/createComponent'
+import { Form2, useComponent } from './decorators/useComponent'
 
 class Form extends BaseComponent {
 	@InputComponent({ label: 'username' })
@@ -35,6 +36,10 @@ class Test extends BaseComponent {
 	form = Form
 }
 
-const loginForm = new Test().createInstanceComponent()
+const f = new Form2()
 
-export default loginForm
+export default useComponent(f)
+
+// const loginForm = new Test().createInstanceComponent()
+
+// export default loginForm
